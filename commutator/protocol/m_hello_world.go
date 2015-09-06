@@ -1,18 +1,19 @@
 package protocol
+
 import (
 	"fmt"
 )
 
 type MessageHelloWorld struct {
-    message_tag MsgTag
+	message_tag MsgTag
 }
 
 func NewHelloWorld(tagger *Tagger) MessageHelloWorld {
-    self := MessageHelloWorld{
-        message_tag: tagger.Next(),
-    }
+	self := MessageHelloWorld{
+		message_tag: tagger.Next(),
+	}
 
-    return self
+	return self
 }
 
 func Packet2HelloWorld(packet Packet) (MessageHelloWorld, error) {
@@ -31,13 +32,13 @@ func Packet2HelloWorld(packet Packet) (MessageHelloWorld, error) {
 }
 
 func (self *MessageHelloWorld) GetMessageId() MsgId {
-    return MSG_HELLO_WORLD
+	return MSG_HELLO_WORLD
 }
 
 func (self *MessageHelloWorld) GetMessageTag() MsgTag {
-    return self.message_tag
+	return self.message_tag
 }
 
 func (self *MessageHelloWorld) GetPayloadData() PayloadData {
-    return PayloadData{}
+	return PayloadData{}
 }
