@@ -16,17 +16,17 @@ func NewHelloWorld(tagger *Tagger) MessageHelloWorld {
 }
 
 func Packet2HelloWorld(packet Packet) (MessageHelloWorld, error) {
-	if packet.meta.message_id != MSG_HELLO_WORLD {
+	if packet.Meta.MessageId != MSG_HELLO_WORLD {
 		return MessageHelloWorld{},
-			fmt.Errorf("Packet2HelloWorld: Unexpected message id: %d.", packet.meta.message_id)
+			fmt.Errorf("Packet2HelloWorld: Unexpected message id: %d.", packet.Meta.MessageId)
 	}
-	if len(packet.payload) != 0 {
+	if len(packet.Payload) != 0 {
 		return MessageHelloWorld{},
 			fmt.Errorf("Packet2HelloWorld: Unexpected payload.")
 	}
 
 	return MessageHelloWorld{
-		message_tag: packet.meta.message_tag,
+		message_tag: packet.Meta.MessageTag,
 	}, nil
 }
 

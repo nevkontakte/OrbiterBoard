@@ -28,42 +28,42 @@ func TestHelloWorld(t *testing.T) {
     // Receive packet
     packet, err := ReceivePacket(buf)
     assert.Nil(err)
-    assert.Equal(MSG_HELLO_WORLD, packet.meta.message_id)
-    assert.Equal(msg.GetMessageTag(), packet.meta.message_tag)
-    assert.Equal(make(PayloadData, 0), packet.payload)
+    assert.Equal(MSG_HELLO_WORLD, packet.Meta.MessageId)
+    assert.Equal(msg.GetMessageTag(), packet.Meta.MessageTag)
+    assert.Equal(make(PayloadData, 0), packet.Payload)
 }
 
 func TestPacket2HelloWorld(t *testing.T) {
     assert := require.New(t)
 
     packet := Packet{
-        meta: PacketMeta{
-            message_id: MSG_RESERVED,
-            message_tag: 1,
+        Meta: PacketMeta{
+            MessageId: MSG_RESERVED,
+            MessageTag: 1,
         },
-        payload: make(PayloadData, 0),
+        Payload: make(PayloadData, 0),
     }
 
     _, err := Packet2HelloWorld(packet)
     assert.NotNil(err)
 
     packet = Packet{
-        meta: PacketMeta{
-            message_id: MSG_HELLO_WORLD,
-            message_tag: 1,
+        Meta: PacketMeta{
+            MessageId: MSG_HELLO_WORLD,
+            MessageTag: 1,
         },
-        payload: make(PayloadData, 1),
+        Payload: make(PayloadData, 1),
     }
 
     _, err = Packet2HelloWorld(packet)
     assert.NotNil(err)
 
     packet = Packet{
-        meta: PacketMeta{
-            message_id: MSG_HELLO_WORLD,
-            message_tag: 1,
+        Meta: PacketMeta{
+            MessageId: MSG_HELLO_WORLD,
+            MessageTag: 1,
         },
-        payload: make(PayloadData, 0),
+        Payload: make(PayloadData, 0),
     }
 
     msg, err := Packet2HelloWorld(packet)

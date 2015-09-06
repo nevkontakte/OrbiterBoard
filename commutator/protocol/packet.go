@@ -18,13 +18,13 @@ type PayloadDataLength uint16
 type PayloadData []uint8
 
 type PacketMeta struct {
-    message_id MsgId
-    message_tag MsgTag
+    MessageId MsgId
+    MessageTag MsgTag
 }
 
 type Packet struct {
-    meta PacketMeta
-    payload PayloadData
+    Meta PacketMeta
+    Payload PayloadData
 }
 
 type Message interface {
@@ -35,25 +35,22 @@ type Message interface {
 
 func Message2Packet(msg Message) Packet {
     return Packet{
-        meta: PacketMeta{
-            message_id: msg.GetMessageId(),
-            message_tag: msg.GetMessageTag(),
+        Meta: PacketMeta{
+            MessageId: msg.GetMessageId(),
+            MessageTag: msg.GetMessageTag(),
         },
-        payload: msg.GetPayloadData(),
+        Payload: msg.GetPayloadData(),
     }
 }
 
 func SendPacket(writer io.Writer, packet Packet) error {
-    if err := binary.Write(writer, binary.BigEndian, packet.meta.message_id); err != nil {
+    if err := binary.Write(writer, binary.BigEndian, packet.Meta); err != nil {
         return err
     }
-    if err := binary.Write(writer, binary.BigEndian, packet.meta.message_tag); err != nil {
+    if err := binary.Write(writer, binary.BigEndian, uint16(len(packet.Payload))); err != nil {
         return err
     }
-    if err := binary.Write(writer, binary.BigEndian, uint16(len(packet.payload))); err != nil {
-        return err
-    }
-    if err := binary.Write(writer, binary.BigEndian, packet.payload); err != nil {
+    if err := binary.Write(writer, binary.BigEndian, packet.Payload); err != nil {
         return err
     }
     return nil
@@ -62,10 +59,7 @@ func SendPacket(writer io.Writer, packet Packet) error {
 func ReceivePacket(reader io.Reader) (Packet, error) {
     var packet Packet;
 
-    if err := binary.Read(reader, binary.BigEndian, &packet.meta.message_id); err != nil {
-        return Packet{}, err
-    }
-    if err := binary.Read(reader, binary.BigEndian, &packet.meta.message_tag); err != nil {
+    if err := binary.Read(reader, binary.BigEndian, &packet.Meta); err != nil {
         return Packet{}, err
     }
 
@@ -74,8 +68,8 @@ func ReceivePacket(reader io.Reader) (Packet, error) {
         return Packet{}, err
     }
 
-    packet.payload = make(PayloadData, payload_length)
-    if err := binary.Read(reader, binary.BigEndian, &packet.payload); err != nil {
+    packet.Payload = make(PayloadData, payload_length)
+    if err := binary.Read(reader, binary.BigEndian, &packet.Payload); err != nil {
         return Packet{}, err
     }
 
